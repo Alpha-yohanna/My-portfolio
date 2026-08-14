@@ -53,9 +53,7 @@ function ProjectCarousel() {
 
   const goToSlide = (nextIndex, nextDirection = "next") => {
     setDirection(nextDirection);
-    setActiveIndex(
-      (nextIndex + projectImages.length) % projectImages.length,
-    );
+    setActiveIndex((nextIndex + projectImages.length) % projectImages.length);
   };
 
   useEffect(() => {
@@ -63,7 +61,9 @@ function ProjectCarousel() {
 
     const interval = window.setInterval(() => {
       setDirection("next");
-      setActiveIndex((currentIndex) => (currentIndex + 1) % projectImages.length);
+      setActiveIndex(
+        (currentIndex) => (currentIndex + 1) % projectImages.length,
+      );
     }, 4500);
 
     return () => window.clearInterval(interval);
