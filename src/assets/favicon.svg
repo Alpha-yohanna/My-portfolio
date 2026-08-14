@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Alpha Yohanna favicon">
+  <rect x="8" y="8" width="48" height="48" rx="10" fill="#ffffff"/>
+  <rect x="10" y="10" width="12" height="12" rx="3" fill="#ffffff"/>
+  <rect x="42" y="10" width="12" height="12" rx="3" fill="#ffffff"/>
+  <rect x="10" y="42" width="12" height="12" rx="3" fill="#ffffff"/>
+  <rect x="42" y="42" width="12" height="12" rx="3" fill="#ffffff"/>
+  <path d="M23 22h8l6 20h-6l-1.2-4h-5.6l-1.2 4h-6l6-20Zm4 6-1.8 6h3.6l-1.8-6Z" fill="#111111"/>
+</svg>
