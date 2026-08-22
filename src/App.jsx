@@ -1,62 +1,48 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer";
-import Header from "./components/Header";
+import Nav from "./components/navigation/Nav";
+import LoadingScreen from "./components/loading/LoadingScreen";
 import BookingPage from "./pages/BookingPage";
 import HomePage from "./pages/HomePage";
 import TermsPage from "./pages/TermsPage";
+import ProductCaseStudyPage from "./pages/ProductCaseStudyPage";
+import { useLenis } from "./hooks/useLenis";
+import { useReducedMotion } from "./hooks/useReducedMotion";
+import { useHashScroll } from "./hooks/useHashScroll";
 
-function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [view, setView] = useState("home");
-  const [pendingSection, setPendingSection] = useState(null);
+function AppShell() {
+  const [loading, setLoading] = useState(true);
+  const reducedMotion = useReducedMotion();
 
-  useEffect(() => {
-    if (view !== "home") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-
-    if (!pendingSection) return;
-
-    window.requestAnimationFrame(() => {
-      const section = document.getElementById(pendingSection);
-
-      if (section) {
-        section.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-
-      setPendingSection(null);
-    });
-  }, [pendingSection, view]);
-
-  const goToView = (nextView, sectionId) => {
-    setView(nextView);
-    setMenuOpen(false);
-
-    if (sectionId) {
-      setPendingSection(sectionId);
-    } else {
-      setPendingSection(null);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
+  useLenis(!reducedMotion && !loading);
+  useHashScroll();
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans">
-      <Header
-        menuOpen={menuOpen}
-        onNavigate={goToView}
-        onToggleMenu={() => setMenuOpen((value) => !value)}
-      />
+    <div className="min-h-screen bg-obsidian font-sans text-ink">
+      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
 
-      <main className="mx-auto max-w-6xl px-5">
-        {view === "home" && <HomePage onNavigate={goToView} />}
-        {view === "terms" && <TermsPage onNavigate={goToView} />}
-        {view === "booking" && <BookingPage onNavigate={goToView} />}
+      <Nav />
+
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/booking" element={<BookingPage />} />
+          <Route path="/products/:slug" element={<ProductCaseStudyPage />} />
+        </Routes>
       </main>
 
       <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppShell />
+    </BrowserRouter>
   );
 }
 

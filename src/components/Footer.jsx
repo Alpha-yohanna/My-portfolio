@@ -1,12 +1,15 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import { socialLinks } from "../data/siteData";
+import { navItems } from "../data/navigation";
+import { scrollToTarget } from "../lib/lenisSingleton";
 
 function SocialIcon({ label }) {
   switch (label) {
     case "Facebook":
       return (
         <svg
-          width="20"
-          height="20"
+          width="18"
+          height="18"
           viewBox="0 0 24 24"
           fill="currentColor"
           aria-hidden
@@ -17,8 +20,8 @@ function SocialIcon({ label }) {
     case "Instagram":
       return (
         <svg
-          width="20"
-          height="20"
+          width="18"
+          height="18"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -35,8 +38,8 @@ function SocialIcon({ label }) {
     case "LinkedIn":
       return (
         <svg
-          width="20"
-          height="20"
+          width="18"
+          height="18"
           viewBox="0 0 24 24"
           fill="currentColor"
           aria-hidden
@@ -47,8 +50,8 @@ function SocialIcon({ label }) {
     case "X":
       return (
         <svg
-          width="20"
-          height="20"
+          width="18"
+          height="18"
           viewBox="0 0 24 24"
           fill="currentColor"
           aria-hidden
@@ -62,24 +65,65 @@ function SocialIcon({ label }) {
 }
 
 function Footer() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const goToSection = (sectionId) => {
+    if (location.pathname === "/") {
+      scrollToTarget(`#${sectionId}`);
+    } else {
+      navigate(`/#${sectionId}`);
+    }
+  };
+
   return (
-    <footer className="border-t border-slate-900 py-12 text-center">
-      <p className="text-slate-500">
-        &copy; 2026 Alpha Yohanna. All rights reserved.
-      </p>
-      <div className="mt-8 flex flex-wrap justify-center gap-4">
-        {socialLinks.map((item) => (
-          <a
-            key={item.label}
-            href={item.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-black transition hover:opacity-90"
-            aria-label={item.label}
-          >
-            <SocialIcon label={item.label} />
-          </a>
-        ))}
+    <footer className="border-t border-white/5 py-16">
+      <div className="mx-auto max-w-6xl px-5">
+        <div className="flex flex-col items-center gap-10 text-center md:flex-row md:items-start md:justify-between md:text-left">
+          <div>
+            <p className="font-display text-xl text-ink">Alpha Yohanna</p>
+            <p className="mt-2 font-mono text-xs uppercase tracking-[0.2em] text-ink-dim">
+              Software Engineer · Product Builder · AI Explorer
+            </p>
+          </div>
+
+          <nav aria-label="Footer" className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 md:justify-end">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => goToSection(item.section)}
+                className="font-mono text-xs uppercase tracking-[0.15em] text-ink-dim transition-colors hover:text-ink"
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        <div className="mt-10 flex flex-wrap justify-center gap-3 md:justify-start">
+          {socialLinks.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 text-ink-dim transition-colors hover:border-white/20 hover:text-ink"
+              aria-label={item.label}
+            >
+              <SocialIcon label={item.label} />
+            </a>
+          ))}
+        </div>
+
+        <div className="mt-12 flex flex-col items-center gap-2 border-t border-white/5 pt-8 text-center md:flex-row md:items-center md:justify-between md:text-left">
+          <p className="text-sm text-ink-dim">
+            &copy; 2026 Alpha Yohanna. All rights reserved.
+          </p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ink-dim">
+            Built with curiosity.
+          </p>
+        </div>
       </div>
     </footer>
   );

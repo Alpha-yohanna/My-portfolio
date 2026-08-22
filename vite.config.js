@@ -11,4 +11,11 @@ export default defineConfig({
       interval: 1000,
     },
   },
+  build: {
+    // The Three.js/R3F scene is already lazy-loaded into its own chunk
+    // (only fetched once the hero mounts), so its size doesn't block
+    // initial paint. Raising this keeps the warning meaningful for
+    // regressions in the main bundle instead of the already-mitigated one.
+    chunkSizeWarningLimit: 1000,
+  },
 });

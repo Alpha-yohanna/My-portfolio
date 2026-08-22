@@ -4,6 +4,18 @@
 
 :root {
   color-scheme: dark;
+
+  --color-obsidian: #08080a;
+  --color-obsidian-raised: #131316;
+  --color-ink: #f4f3ee;
+  --color-ink-dim: #9a9a94;
+  --color-accent: #5b5bf0;
+  --color-accent-soft: #8583ff;
+
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 300ms;
+  --duration-base: 600ms;
+  --duration-slow: 1000ms;
 }
 
 html {
@@ -12,8 +24,8 @@ html {
 
 body {
   min-height: 100vh;
-  background: #000;
-  color: #fff;
+  background: var(--color-obsidian);
+  color: var(--color-ink);
   font-family:
     Inter,
     ui-sans-serif,
@@ -28,63 +40,30 @@ body {
   box-sizing: border-box;
 }
 
-.project-carousel-image {
-  position: absolute;
-  inset: 0;
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  filter: grayscale(1) contrast(1.05);
-  opacity: 0;
-  transform: translateX(18px) scale(1.01);
-  transition:
-    opacity 800ms ease,
-    transform 800ms ease,
-    filter 500ms ease;
-  user-select: none;
-  touch-action: pan-y;
+.glass-surface {
+  background: rgba(244, 243, 238, 0.04);
+  border: 1px solid rgba(244, 243, 238, 0.08);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
 
-.project-carousel-image-active {
-  opacity: 1;
-  transform: translateX(0) scale(1);
+:focus-visible {
+  outline: 2px solid var(--color-accent-soft);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
-.project-carousel-image-next {
-  animation: carousel-next 850ms ease both;
-}
-
-.project-carousel-image-previous {
-  animation: carousel-previous 850ms ease both;
-}
-
-@keyframes carousel-next {
-  from {
-    opacity: 0;
-    transform: translateX(28px) scale(1.015);
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-@keyframes carousel-previous {
-  from {
-    opacity: 0;
-    transform: translateX(-28px) scale(1.015);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-@media (hover: hover) {
-  .group:hover .project-carousel-image-active {
-    filter: grayscale(1) contrast(1.08) brightness(1.05);
-    transform: translateX(0) scale(1.02);
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

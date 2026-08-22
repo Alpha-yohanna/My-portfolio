@@ -1,6 +1,12 @@
-function TermsPage({ onNavigate }) {
+import { Link } from "react-router-dom";
+import { contactInfo } from "../data/siteData";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
+
+function TermsPage() {
+  useDocumentTitle("Project Terms — Alpha Yohanna");
+
   return (
-    <section className="py-16 md:py-24">
+    <section className="px-5 pb-16 pt-32 md:pb-24 md:pt-40">
       <div className="mx-auto max-w-4xl rounded-3xl border border-slate-800 bg-slate-950/70 p-8 shadow-sm sm:p-10">
         <p className="text-sm uppercase tracking-[0.25em] text-blue-400">
           Project Agreement & Booking Terms
@@ -61,41 +67,39 @@ function TermsPage({ onNavigate }) {
             <p>
               Email:{" "}
               <a
-                href="mailto:alphayohanna33@gmail.com"
+                href={`mailto:${contactInfo.email}`}
                 className="text-blue-400 underline"
               >
-                alphayohanna33@gmail.com
+                {contactInfo.email}
               </a>
             </p>
             <p>
               WhatsApp:{" "}
               <a
-                href="https://wa.me/08033199422"
+                href={contactInfo.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-400 underline"
               >
-                08033199422
+                {contactInfo.phoneDisplay}
               </a>
             </p>
           </div>
         </div>
 
         <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
-          <button
-            type="button"
-            onClick={() => onNavigate("home")}
+          <Link
+            to="/"
             className="rounded-2xl border border-slate-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
           >
             Back to Home
-          </button>
-          <button
-            type="button"
-            onClick={() => onNavigate("booking")}
+          </Link>
+          <Link
+            to="/booking"
             className="rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-blue-600 hover:text-white"
           >
             I agree & continue
-          </button>
+          </Link>
         </div>
       </div>
     </section>
