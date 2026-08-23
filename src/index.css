@@ -53,6 +53,117 @@ body {
   border-radius: 2px;
 }
 
+@keyframes hero-breathe {
+  0%,
+  100% {
+    transform: scale(0.95);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.85;
+  }
+}
+
+.hero-breathe {
+  animation-name: hero-breathe;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+.hero-parallax {
+  transition: transform 0.5s var(--ease-premium);
+  will-change: transform;
+}
+
+@keyframes hero-ember-dot-glow {
+  0%,
+  84%,
+  100% {
+    background-color: rgba(255, 255, 255, 0.6);
+    box-shadow: none;
+  }
+  88%,
+  93% {
+    background-color: #f28c28;
+    box-shadow: 0 0 8px rgba(242, 140, 40, 0.55);
+  }
+  97% {
+    background-color: rgba(255, 255, 255, 0.6);
+    box-shadow: none;
+  }
+}
+
+.hero-ember-dot {
+  animation-name: hero-ember-dot-glow;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: background-color, box-shadow;
+}
+
+.hero-ember-spin {
+  pointer-events: none;
+}
+
+@keyframes hero-ember-fly {
+  0%,
+  74% {
+    opacity: 0;
+    transform: translateX(0) scale(1);
+  }
+  78% {
+    opacity: 1;
+    transform: translateX(0) scale(1.15);
+  }
+  86% {
+    opacity: 1;
+    transform: translateX(var(--ember-mid, 8px)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(var(--ember-distance, 16px)) scale(0.45);
+  }
+}
+
+.hero-ember-particle {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  border-radius: 9999px;
+  background: #f28c28;
+  box-shadow:
+    0 0 10px rgba(242, 140, 40, 0.5),
+    0 0 3px rgba(242, 140, 40, 0.9);
+  opacity: 0;
+  animation-name: hero-ember-fly;
+  animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+.hero-ember-particle--streak {
+  width: 7px;
+  height: 1.5px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ember-dot {
+    animation: none;
+    background-color: rgba(242, 140, 40, 0.35);
+    box-shadow: none;
+  }
+
+  .hero-ember-particle {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
