@@ -2,8 +2,8 @@ import { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Edges, Float, Icosahedron, RoundedBox } from "@react-three/drei";
 
-const ACCENT = "#5b5bf0";
-const ACCENT_SOFT = "#8583ff";
+const ACCENT = "#f28c28";
+const ACCENT_SOFT = "#f6a555";
 
 function Panel({ position, rotation, size = [1.1, 0.7, 0.03], speed = 1 }) {
   return (

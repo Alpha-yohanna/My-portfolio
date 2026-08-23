@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { navItems } from "../../data/navigation";
 import CommandMenu from "./CommandMenu";
+import Button from "../ui/Button";
 import { scrollToTarget } from "../../lib/lenisSingleton";
 
 function Nav() {
@@ -57,41 +58,50 @@ function Nav() {
       <motion.header
         animate={{ y: hidden ? -100 : 0 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed inset-x-0 top-4 z-50 flex justify-center px-4"
+        className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-500 ${
+          elevated
+            ? "border-white/10 bg-obsidian/85 backdrop-blur-md"
+            : "border-transparent bg-transparent"
+        }`}
       >
-        <div
-          className={`flex w-full max-w-4xl items-center justify-between rounded-full px-5 py-3 transition-colors duration-500 ${
-            elevated ? "glass-surface" : "border border-transparent"
-          }`}
-        >
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
           <button
             type="button"
             onClick={() => goToSection(null)}
             aria-label="Go to homepage"
-            className="flex items-center gap-3"
+            className="flex items-center gap-2.5"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-ink text-sm font-semibold text-obsidian">
-              AY
-            </div>
-            <span className="hidden font-mono text-xs uppercase tracking-[0.2em] text-ink sm:inline">
-              Alpha Yohanna
+            <span className="font-display text-2xl font-bold tracking-tight text-ink">
+              AY<span className="text-accent">.</span>
+            </span>
+            <span className="hidden flex-col text-left font-mono text-[10px] uppercase leading-tight tracking-[0.15em] text-ink-dim sm:flex">
+              <span>Alpha</span>
+              <span>Yohanna</span>
             </span>
           </button>
 
-          <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
-            {navItems
-              .filter((item) => item.id !== "home")
-              .map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => goToSection(item.section)}
-                  className="rounded-full px-4 py-2 font-mono text-xs uppercase tracking-[0.15em] text-ink-dim transition-colors hover:text-ink"
-                >
-                  {item.label}
-                </button>
-              ))}
+          <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => goToSection(item.section)}
+                className="font-mono text-xs uppercase tracking-[0.15em] text-ink-dim transition-colors hover:text-ink"
+              >
+                {item.label}
+              </button>
+            ))}
           </nav>
+
+          <div className="hidden md:block">
+            <Button
+              variant="secondary"
+              className="!rounded-full !px-6 !py-2.5 text-xs"
+              onClick={() => goToSection("contact")}
+            >
+              Let's Talk ↗
+            </Button>
+          </div>
 
           <button
             ref={menuButtonRef}
@@ -99,9 +109,11 @@ function Nav() {
             onClick={() => setMenuOpen(true)}
             aria-haspopup="dialog"
             aria-expanded={menuOpen}
-            className="rounded-full px-4 py-2 font-mono text-xs uppercase tracking-[0.2em] text-ink transition-colors hover:text-accent-soft"
+            aria-label="Open menu"
+            className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 md:hidden"
           >
-            Menu
+            <span className="h-px w-5 bg-ink transition-colors" />
+            <span className="h-px w-5 bg-ink transition-colors" />
           </button>
         </div>
       </motion.header>

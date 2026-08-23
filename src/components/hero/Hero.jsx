@@ -1,29 +1,29 @@
-import { lazy, Suspense, useRef } from "react";
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import Button from "../ui/Button";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
-import { useIsCoarsePointer } from "../../hooks/useIsCoarsePointer";
 import { useSectionScrollProgress } from "../../hooks/useSectionScrollProgress";
 import { fadeUp, staggerChildren } from "../../lib/motion";
 import { scrollToTarget } from "../../lib/lenisSingleton";
-
-const HeroScene = lazy(() => import("../three/HeroScene"));
 
 function scrollToId(id) {
   scrollToTarget(`#${id}`);
 }
 
+function DotGrid({ className }) {
+  return (
+    <div className={`grid grid-cols-3 gap-1.5 ${className}`} aria-hidden="true">
+      {Array.from({ length: 9 }).map((_, index) => (
+        <span key={index} className="h-1 w-1 rounded-full bg-white/15" />
+      ))}
+    </div>
+  );
+}
+
 function Hero() {
   const sectionRef = useRef(null);
   const reducedMotion = useReducedMotion();
-  const isCoarsePointer = useIsCoarsePointer();
   const scrollProgress = useSectionScrollProgress(sectionRef);
-
-  // scrollProgress reaches 1 once the hero has fully scrolled out of view —
-  // reuse it to stop the WebGL render loop instead of running it for the
-  // entire session while the canvas sits invisible far below the fold.
-  const heroInView = scrollProgress < 1;
-  const show3D = !reducedMotion && !isCoarsePointer && heroInView;
 
   return (
     <section
@@ -32,18 +32,23 @@ function Hero() {
       className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-5"
     >
       <div aria-hidden="true" className="absolute inset-0 -z-10">
-        {show3D ? (
-          <Suspense fallback={null}>
-            <HeroScene
-              scrollProgress={scrollProgress}
-              enablePointer={!isCoarsePointer}
-            />
-          </Suspense>
-        ) : (
-          <div className="h-full w-full bg-[radial-gradient(circle_at_50%_35%,rgba(91,91,240,0.18),transparent_60%)]" />
-        )}
+        <div className="absolute -left-40 -top-32 h-80 w-80 rounded-full bg-obsidian-100 blur-3xl sm:h-[26rem] sm:w-[26rem]" />
+        <div className="absolute -bottom-40 -right-32 h-80 w-80 rounded-full bg-obsidian-100 blur-3xl sm:h-[26rem] sm:w-[26rem]" />
+
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 sm:block">
+          <div className="h-[26rem] w-[26rem] rounded-full border border-white/[0.06]" />
+          <div className="absolute inset-8 rounded-full border border-white/[0.05]" />
+          <div className="absolute inset-16 rounded-full border border-white/[0.04]" />
+        </div>
+
+        <DotGrid className="absolute left-[12%] top-[28%] hidden sm:grid" />
+        <DotGrid className="absolute right-[12%] top-[28%] hidden sm:grid" />
+        <DotGrid className="absolute bottom-[24%] left-[16%] hidden sm:grid" />
+        <DotGrid className="absolute bottom-[24%] right-[16%] hidden sm:grid" />
+
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/[0.04] to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-obsidian" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_65%_55%_at_50%_48%,rgba(8,8,10,0.6),transparent_72%)]" />
       </div>
 
       <motion.div
@@ -58,23 +63,16 @@ function Hero() {
                 transform: `translateY(${scrollProgress * 40}px)`,
               }
         }
-        className="w-full max-w-4xl text-center"
+        className="relative w-full max-w-3xl text-center"
       >
         <motion.h1
           variants={fadeUp}
-          className="font-display text-display-xl text-ink"
+          className="font-sans text-3xl font-extrabold uppercase leading-tight tracking-tight text-ink sm:text-5xl md:text-6xl"
         >
-          ALPHA
+          Software Engineer.
           <br />
-          YOHANNA
+          Product Builder. AI Explorer.
         </motion.h1>
-
-        <motion.p
-          variants={fadeUp}
-          className="mt-6 font-mono text-xs uppercase tracking-[0.3em] text-accent-soft sm:text-sm"
-        >
-          Software Engineer · Product Builder · AI Explorer
-        </motion.p>
 
         <motion.p
           variants={fadeUp}
@@ -89,11 +87,15 @@ function Hero() {
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
           <Button variant="primary" onClick={() => scrollToId("work")}>
-            Explore Work
+            Explore My Work ↗
           </Button>
-          <Button variant="secondary" onClick={() => scrollToId("contact")}>
+          <button
+            type="button"
+            onClick={() => scrollToId("contact")}
+            className="font-mono text-sm uppercase tracking-[0.15em] text-ink-dim underline-offset-4 transition-colors hover:text-ink hover:underline"
+          >
             Let's Talk
-          </Button>
+          </button>
         </motion.div>
       </motion.div>
     </section>

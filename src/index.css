@@ -9,8 +9,8 @@
   --color-obsidian-raised: #131316;
   --color-ink: #f4f3ee;
   --color-ink-dim: #9a9a94;
-  --color-accent: #5b5bf0;
-  --color-accent-soft: #8583ff;
+  --color-accent: #f28c28;
+  --color-accent-soft: #f6a555;
 
   --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 300ms;
@@ -41,8 +41,8 @@ body {
 }
 
 .glass-surface {
-  background: rgba(244, 243, 238, 0.04);
-  border: 1px solid rgba(244, 243, 238, 0.08);
+  background: rgba(244, 243, 238, 0.07);
+  border: 1px solid rgba(244, 243, 238, 0.16);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
 }

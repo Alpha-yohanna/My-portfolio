@@ -15,9 +15,9 @@ export default {
           dim: "#9a9a94",
         },
         accent: {
-          DEFAULT: "#5b5bf0",
-          soft: "#8583ff",
-          dim: "#3f3fb0",
+          DEFAULT: "#f28c28",
+          soft: "#f6a555",
+          dim: "#b3651c",
         },
       },
       fontFamily: {
@@ -34,8 +34,8 @@ export default {
         "4xl": "2rem",
       },
       boxShadow: {
-        glass: "0 1px 0 0 rgba(255,255,255,0.06) inset, 0 8px 40px -12px rgba(0,0,0,0.6)",
-        "accent-glow": "0 0 0 1px rgba(91,91,240,0.4), 0 0 32px -4px rgba(91,91,240,0.35)",
+        glass: "0 1px 0 0 rgba(255,255,255,0.1) inset, 0 12px 48px -12px rgba(0,0,0,0.7)",
+        "accent-glow": "0 0 0 1px rgba(242,140,40,0.4), 0 0 32px -4px rgba(242,140,40,0.35)",
       },
       transitionTimingFunction: {
         premium: "cubic-bezier(0.16, 1, 0.3, 1)",
