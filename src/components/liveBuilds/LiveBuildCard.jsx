@@ -58,9 +58,16 @@ function LiveBuildCard({ project, reverse }) {
           ))}
         </div>
 
-        <div className="mt-8 flex flex-wrap gap-4">
-          <Button as="a" href={project.url} target="_blank" rel="noopener noreferrer" variant="primary">
-            Open {project.name} ↗
+        <div className="mt-8 flex flex-nowrap gap-3 sm:gap-4">
+          <Button
+            as="a"
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="primary"
+            className="flex-1 whitespace-nowrap px-4 sm:flex-none sm:px-7"
+          >
+            View Live ↗
           </Button>
           {project.repoUrl && (
             <Button
@@ -69,6 +76,7 @@ function LiveBuildCard({ project, reverse }) {
               target="_blank"
               rel="noopener noreferrer"
               variant="secondary"
+              className="flex-1 whitespace-nowrap px-4 sm:flex-none sm:px-7"
             >
               View Source ↗
             </Button>
