@@ -1,11 +1,20 @@
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import Button from "../ui/Button";
+import HeroVisualB, { HeroVisualBMobile } from "./HeroVisualB";
+import EditorialContentBlock from "./EditorialContentBlock";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useIsCoarsePointer } from "../../hooks/useIsCoarsePointer";
 import { useSectionScrollProgress } from "../../hooks/useSectionScrollProgress";
-import { fadeUp, staggerChildren } from "../../lib/motion";
+import { useHeroCycle } from "../../hooks/useHeroCycle";
 import { scrollToTarget } from "../../lib/lenisSingleton";
+
+const HERO_STATE_KEYS = ["black", "green", "cream", "navy"];
+
+const ACCENT_YELLOW = "#f4c430";
+const ACCENT_DARK = "#12160c";
+const CREAM_INK = "#14203a";
+const CREAM_ACCENT = "#c2410c";
+const NAVY_ACCENT = "#2f6fed";
 
 function scrollToId(id) {
   scrollToTarget(`#${id}`);
@@ -16,6 +25,39 @@ const RINGS = [
   { size: 460, opacity: 0.06 },
   { size: 600, opacity: 0.045 },
   { size: 740, opacity: 0.03 },
+];
+
+const RING_THEMES = [
+  { key: "black", rgb: "255,255,255" },
+  { key: "green", rgb: "228,185,74" },
+  { key: "cream", rgb: "194,65,12" },
+  { key: "navy", rgb: "47,111,237" },
+];
+
+const BLUR_THEMES = [
+  { key: "black", color: "#1a1a1f", strength: 0.6 },
+  { key: "green", color: "#3f5a22", strength: 0.6 },
+  { key: "cream", color: "#c2410c", strength: 0.3 },
+  { key: "navy", color: "#2f6fed", strength: 0.45 },
+];
+
+const WASH_THEMES = [
+  {
+    key: "green",
+    background:
+      "linear-gradient(90deg, rgba(244,243,238,0.025) 1px, transparent 1px), linear-gradient(0deg, rgba(244,243,238,0.025) 1px, transparent 1px), radial-gradient(ellipse 70% 60% at 78% 45%, rgba(156,184,75,0.16), transparent 60%), linear-gradient(160deg, #0b0f08 0%, #16210d 35%, #253817 65%, #34491f 100%)",
+    backgroundSize: "64px 64px, 64px 64px, auto, auto",
+  },
+  {
+    key: "cream",
+    background:
+      "radial-gradient(ellipse 65% 60% at 50% 45%, rgba(255,255,255,0) 45%, rgba(194,65,12,0.18) 100%), linear-gradient(180deg, #f6ecd9 0%, #f1e2c9 100%)",
+  },
+  {
+    key: "navy",
+    background:
+      "radial-gradient(ellipse 70% 60% at 25% 40%, rgba(47,111,237,0.16), transparent 60%), linear-gradient(160deg, #050a1a 0%, #0a1128 40%, #0d1730 70%, #101d3d 100%)",
+  },
 ];
 
 const CLUSTERS = [
@@ -196,13 +238,31 @@ function ParticleCluster({ cluster, parallaxRef }) {
   );
 }
 
-function Hero() {
+function Hero({ heroReady = true }) {
   const sectionRef = useRef(null);
   const parallaxRefs = useRef([]);
   const frameRef = useRef(null);
   const reducedMotion = useReducedMotion();
   const isCoarsePointer = useIsCoarsePointer();
   const scrollProgress = useSectionScrollProgress(sectionRef);
+  const [heroInView, setHeroInView] = useState(true);
+
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeroInView(entry.isIntersecting),
+      { threshold: 0.1 },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  const dominant = useHeroCycle(sectionRef, {
+    active: heroReady && heroInView,
+    reducedMotion,
+    states: HERO_STATE_KEYS,
+  });
 
   parallaxRefs.current = [];
   const registerParallaxRef = (node) => {
@@ -246,42 +306,78 @@ function Hero() {
     };
   }, [reducedMotion, isCoarsePointer]);
 
+  const blurA = reducedMotion ? undefined : "blur(calc((1 - var(--w-black)) * 4px))";
+  const blurG = reducedMotion ? undefined : "blur(calc((1 - var(--w-green)) * 4px))";
+
   return (
     <section
       id="home"
       ref={sectionRef}
-      className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-black px-5 pt-28"
+      className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-black px-5 pt-28 sm:px-8 lg:px-16 xl:px-24"
+      style={{ "--w-black": 1, "--w-green": 0, "--w-cream": 0, "--w-navy": 0 }}
     >
-      <div aria-hidden="true" className="absolute inset-0 -z-10">
-        <div className="absolute -left-40 -top-32 h-80 w-80 rounded-full bg-obsidian-50 opacity-60 blur-3xl sm:h-[26rem] sm:w-[26rem]" />
-        <div className="absolute -bottom-40 -right-32 h-80 w-80 rounded-full bg-obsidian-50 opacity-60 blur-3xl sm:h-[26rem] sm:w-[26rem]" />
-
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          {RINGS.map((ring) => (
-            <div
-              key={ring.size}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border"
-              style={{
-                width: `min(${ring.size}px, 92vw)`,
-                height: `min(${ring.size}px, 92vw)`,
-                borderColor: `rgba(255,255,255,${ring.opacity})`,
-              }}
-            />
-          ))}
-        </div>
-
-        {CLUSTERS.map((cluster) => (
-          <ParticleCluster key={cluster.id} cluster={cluster} parallaxRef={registerParallaxRef} />
+      {/* Green / Cream / Navy backgrounds — crossfade in over the permanent black base */}
+      <div aria-hidden="true" className="absolute inset-0 -z-20">
+        {WASH_THEMES.map((theme) => (
+          <div
+            key={theme.key}
+            className="absolute inset-0"
+            style={{
+              opacity: `var(--w-${theme.key})`,
+              backgroundImage: theme.background,
+              backgroundSize: theme.backgroundSize,
+            }}
+          />
         ))}
-
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-[radial-gradient(ellipse_60%_100%_at_50%_100%,rgba(255,255,255,0.08),transparent_70%)]" />
       </div>
 
-      <motion.div
-        variants={staggerChildren(0.12)}
-        initial="hidden"
-        animate="visible"
+      <div aria-hidden="true" className="absolute inset-0 -z-10">
+        {["-left-40 -top-32", "-bottom-40 -right-32"].map((pos) =>
+          BLUR_THEMES.map((theme) => (
+            <div
+              key={`${pos}-${theme.key}`}
+              className={`absolute ${pos} h-80 w-80 rounded-full blur-3xl sm:h-[26rem] sm:w-[26rem]`}
+              style={{ backgroundColor: theme.color, opacity: `calc(${theme.strength} * var(--w-${theme.key}))` }}
+            />
+          )),
+        )}
+
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          {RING_THEMES.map((theme) =>
+            RINGS.map((ring) => (
+              <div
+                key={`${theme.key}-${ring.size}`}
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border"
+                style={{
+                  width: `min(${ring.size}px, 92vw)`,
+                  height: `min(${ring.size}px, 92vw)`,
+                  borderColor: `rgba(${theme.rgb},${ring.opacity})`,
+                  opacity: `var(--w-${theme.key})`,
+                }}
+              />
+            )),
+          )}
+        </div>
+
+        <div style={{ opacity: "var(--w-black)" }}>
+          {CLUSTERS.map((cluster) => (
+            <ParticleCluster key={cluster.id} cluster={cluster} parallaxRef={registerParallaxRef} />
+          ))}
+
+          <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-[radial-gradient(ellipse_60%_100%_at_50%_100%,rgba(255,255,255,0.08),transparent_70%)]" />
+        </div>
+      </div>
+
+      <HeroVisualB
+        mountReady={heroReady}
+        reducedMotion={reducedMotion}
+        isCoarsePointer={isCoarsePointer}
+        heroInView={heroInView}
+        registerParallaxRef={registerParallaxRef}
+      />
+
+      <div
         style={
           reducedMotion
             ? undefined
@@ -290,41 +386,109 @@ function Hero() {
                 transform: `translateY(${scrollProgress * 40}px)`,
               }
         }
-        className="relative w-full max-w-3xl text-center"
+        className="relative z-0 w-full"
       >
-        <motion.h1
-          variants={fadeUp}
-          className="font-display text-display-md text-ink"
-        >
-          Software Engineer.
-          <br />
-          Product Builder. AI Explorer.
-        </motion.h1>
-
-        <motion.p
-          variants={fadeUp}
-          className="mx-auto mt-6 max-w-xl text-base leading-8 text-ink-dim sm:text-lg"
-        >
-          Building digital products, intelligent systems, and experiences
-          that turn ideas into reality.
-        </motion.p>
-
-        <motion.div
-          variants={fadeUp}
-          className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
-        >
-          <Button variant="primary" onClick={() => scrollToId("work")}>
-            Explore My Work ↗
-          </Button>
-          <button
-            type="button"
-            onClick={() => scrollToId("contact")}
-            className="font-mono text-sm uppercase tracking-[0.15em] text-ink-dim underline-offset-4 transition-colors hover:text-ink hover:underline"
+        <div className="relative grid w-full">
+          {/* Black — original, centered editorial serif */}
+          <div
+            className="[grid-area:1/1] mx-auto w-full max-w-3xl text-center"
+            style={{
+              opacity: "var(--w-black)",
+              transform: "translateY(calc((1 - var(--w-black)) * -14px))",
+              filter: blurA,
+            }}
+            inert={dominant !== "black"}
           >
-            Let's Talk
-          </button>
-        </motion.div>
-      </motion.div>
+            <h1 className="font-display text-display-md text-ink">
+              Software Engineer.
+              <br />
+              Product Builder. AI Explorer.
+            </h1>
+
+            <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-ink-dim sm:text-lg">
+              Building digital products, intelligent systems, and experiences
+              that turn ideas into reality.
+            </p>
+
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button variant="primary" onClick={() => scrollToId("work")}>
+                Explore My Work ↗
+              </Button>
+              <button
+                type="button"
+                onClick={() => scrollToId("contact")}
+                className="font-mono text-sm uppercase tracking-[0.15em] text-ink-dim underline-offset-4 transition-colors hover:text-ink hover:underline"
+              >
+                Let's Talk
+              </button>
+            </div>
+          </div>
+
+          {/* Green — left-aligned, bold editorial */}
+          <div
+            className="[grid-area:1/1] w-full max-w-xl text-left"
+            style={{
+              opacity: "var(--w-green)",
+              transform: "translateY(calc((1 - var(--w-green)) * 14px))",
+              filter: blurG,
+            }}
+            inert={dominant !== "green"}
+          >
+            <h1 className="font-sans text-[clamp(2.5rem,5.8vw,4.75rem)] font-black uppercase leading-[0.95] tracking-tight text-ink">
+              Software Engineer.
+              <br />
+              Product Builder.
+              <br />
+              <span style={{ color: ACCENT_DARK }}>AI</span>{" "}
+              <span style={{ color: ACCENT_YELLOW }}>Explorer.</span>
+            </h1>
+
+            <p className="mt-6 max-w-md text-base leading-7 text-ink/80 sm:text-lg">
+              Building digital products, intelligent systems, and experiences
+              that turn ideas into reality.
+            </p>
+
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <Button variant="primary" onClick={() => scrollToId("work")}>
+                Explore My Work →
+              </Button>
+              <button
+                type="button"
+                onClick={() => scrollToId("contact")}
+                className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-[#9cb84b]/10 px-6 py-3.5 font-mono text-sm uppercase tracking-[0.15em] text-ink transition-colors hover:border-white/40"
+              >
+                Let's Talk →
+              </button>
+            </div>
+
+            <HeroVisualBMobile
+              mountReady={heroReady}
+              reducedMotion={reducedMotion}
+              heroInView={heroInView}
+            />
+          </div>
+
+          {/* Cream — warm editorial, deep-navy serif with rust accent */}
+          <EditorialContentBlock
+            stateKey="cream"
+            dominant={dominant}
+            reducedMotion={reducedMotion}
+            textColor={CREAM_INK}
+            dimTextColor={`${CREAM_INK}99`}
+            accentColor={CREAM_ACCENT}
+          />
+
+          {/* Navy — technical editorial, white serif with electric-blue accent */}
+          <EditorialContentBlock
+            stateKey="navy"
+            dominant={dominant}
+            reducedMotion={reducedMotion}
+            textColor="#f4f3ee"
+            dimTextColor="rgba(244,243,238,0.75)"
+            accentColor={NAVY_ACCENT}
+          />
+        </div>
+      </div>
     </section>
   );
 }

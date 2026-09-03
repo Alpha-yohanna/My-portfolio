@@ -9,14 +9,14 @@ import Process from "../components/process/Process";
 import Contact from "../components/contact/Contact";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
-function HomePage() {
+function HomePage({ heroReady }) {
   useDocumentTitle(
     "Alpha Yohanna — Software Engineer, Product Builder, Creative Technologist",
   );
 
   return (
     <>
-      <Hero />
+      <Hero heroReady={heroReady} />
 
       <div className="mx-auto max-w-6xl px-5">
       <About />

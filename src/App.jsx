@@ -26,7 +26,7 @@ function AppShell() {
 
       <main>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage heroReady={!loading} />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/products/:slug" element={<ProductCaseStudyPage />} />
