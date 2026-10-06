@@ -3,7 +3,7 @@ export const liveBuilds = [
     id: "digital-agency",
     name: "Digital Agency",
     category: "Digital Agency · Marketing & Web",
-    url: "https://alpha-yohanna.github.io/DigitalAgency/",
+    url: "https://digitalagency.alphayohanna.com",
     repoUrl: "https://github.com/Alpha-Yohanna/DigitalAgency",
     description:
       "A clean agency website built to present services clearly and guide visitors toward action — with a working, Supabase-backed contact form and an admin dashboard for managing incoming leads.",
@@ -19,7 +19,7 @@ export const liveBuilds = [
     id: "teamhub",
     name: "TeamHub",
     category: "Team Collaboration Platform",
-    url: "https://team-hub-two-drab.vercel.app/",
+    url: "https://teamhub.alphayohanna.com",
     repoUrl: "https://github.com/Alpha-Yohanna/TeamHub",
     description:
       "A modern workspace platform for teams to collaborate, organize work, and manage projects in one place — built on a real authenticated, database-backed foundation rather than a static mockup.",
