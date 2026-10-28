@@ -306,7 +306,7 @@ function Hero({ heroReady = true }) {
     <section
       id="home"
       ref={sectionRef}
-      className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-black px-5 pt-28 sm:px-8 lg:px-16 xl:px-24"
+      className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-black px-5 pt-0 sm:px-8 md:pt-28 lg:px-16 xl:px-24"
       style={{ "--w-black": 1, "--w-green": 0, "--w-cream": 0, "--w-navy": 0 }}
     >
       {/* Green / Cream / Navy backgrounds — crossfade in over the permanent black base */}
@@ -419,7 +419,7 @@ function Hero({ heroReady = true }) {
 
           {/* Green — left-aligned, bold editorial */}
           <div
-            className="[grid-area:1/1] w-full max-w-xl text-left"
+            className="[grid-area:1/1] max-md:absolute max-md:inset-x-0 max-md:top-0 w-full max-w-xl text-left"
             style={{
               opacity: "var(--w-green)",
               transform: "translateY(calc((1 - var(--w-green)) * 14px))",

@@ -20,7 +20,7 @@ function EditorialContentBlock({
 }) {
   return (
     <div
-      className="[grid-area:1/1] w-full max-w-xl text-left"
+      className="[grid-area:1/1] max-md:absolute max-md:inset-x-0 max-md:top-0 w-full max-w-xl text-left"
       style={{
         opacity: `var(--w-${stateKey})`,
         transform: `translateY(calc((1 - var(--w-${stateKey})) * 14px))`,
