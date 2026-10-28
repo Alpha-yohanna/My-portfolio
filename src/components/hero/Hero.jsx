@@ -5,10 +5,7 @@ import EditorialContentBlock from "./EditorialContentBlock";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useIsCoarsePointer } from "../../hooks/useIsCoarsePointer";
 import { useSectionScrollProgress } from "../../hooks/useSectionScrollProgress";
-import { useHeroCycle } from "../../hooks/useHeroCycle";
 import { scrollToTarget } from "../../lib/lenisSingleton";
-
-const HERO_STATE_KEYS = ["black", "green", "cream", "navy"];
 
 const ACCENT_YELLOW = "#f4c430";
 const ACCENT_DARK = "#12160c";
@@ -258,11 +255,7 @@ function Hero({ heroReady = true }) {
     return () => observer.disconnect();
   }, []);
 
-  const dominant = useHeroCycle(sectionRef, {
-    active: heroReady && heroInView,
-    reducedMotion,
-    states: HERO_STATE_KEYS,
-  });
+  const dominant = "black";
 
   parallaxRefs.current = [];
   const registerParallaxRef = (node) => {

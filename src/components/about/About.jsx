@@ -1,5 +1,69 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { fadeUp, staggerChildren } from "../../lib/motion";
+import { useReducedMotion } from "../../hooks/useReducedMotion";
+
+const PROFILE_IMAGES = [
+  "/Alpha1.jpeg",
+  "/Alpha2.jpeg",
+  "/Alpha3.jpeg",
+  "/Alpha4.jpeg",
+  "/Alpha5.jpeg",
+  "/Alpha6.jpeg",
+  "/Alpha7.jpeg",
+  "/Hero.jpeg",
+];
+
+function ProfileImageCarousel() {
+  const [activeImage, setActiveImage] = useState(0);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    PROFILE_IMAGES.forEach((src) => {
+      const image = new Image();
+      image.src = src;
+    });
+
+    const interval = window.setInterval(() => {
+      setActiveImage((current) => (current + 1) % PROFILE_IMAGES.length);
+    }, 4000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.96 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      className="group relative mx-auto aspect-[978/700] w-full max-w-sm overflow-hidden rounded-3xl border border-white/10"
+    >
+      {PROFILE_IMAGES.map((src, index) => {
+        const isActive = index === activeImage;
+
+        return (
+          <img
+            key={src}
+            src={src}
+            alt={isActive ? "Alpha Yohanna" : ""}
+            aria-hidden={!isActive}
+            width={index === 7 ? 978 : index === 0 ? 1080 : 809}
+            height={index === 7 ? 700 : 1080}
+            decoding="async"
+            className={`absolute inset-0 h-full w-full object-cover grayscale transition-all group-hover:grayscale-0 ${
+              reducedMotion ? "duration-0" : "duration-700"
+            }`}
+            style={{
+              opacity: isActive ? 1 : 0,
+              objectPosition: index === 7 ? "center" : "center 30%",
+            }}
+          />
+        );
+      })}
+    </motion.div>
+  );
+}
 
 function About() {
   return (
@@ -53,23 +117,7 @@ function About() {
           </motion.div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="group mx-auto w-full max-w-sm overflow-hidden rounded-3xl border border-white/10"
-        >
-          <img
-            src="/Hero.jpeg"
-            alt="Alpha Yohanna"
-            width={978}
-            height={700}
-            loading="lazy"
-            decoding="async"
-            className="h-full max-h-[480px] w-full object-cover object-center grayscale transition-all duration-700 group-hover:grayscale-0"
-          />
-        </motion.div>
+        <ProfileImageCarousel />
       </div>
     </section>
   );
